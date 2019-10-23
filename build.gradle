@@ -5,14 +5,34 @@
  * For more details take a look at the Java Quickstart chapter in the Gradle
  * User Manual available at https://docs.gradle.org/5.6.2/userguide/tutorial_java_projects.html
  */
+buildscript {
+  ext {
+    camel = {
+      version = "${project.'camel.version'}"
+    }
+    springboot = {
+      version = "${project.'springboot.version'}"
+    }
+    junit = {
+      version = "${project.'junit.version'}"
+    }
+  }
+  repositories {
+    jcenter()
+    mavenCentral()
+  }
+  dependencies {
+    classpath "org.springframework.boot:spring-boot-gradle-plugin:${project.'springboot.version'}"
+    classpath "com.gradle:gradle-enterprise-gradle-plugin:3.0"
+    classpath "io.franzbecker:gradle-lombok:3.2.0"
+  }
+}
 
 plugins {
     // Apply the java plugin to add support for Java
     id 'java'
-
     // Apply the application plugin to add support for building a CLI application
     id 'application'
-
     // Eclipse
     id 'eclipse'
 }
@@ -24,16 +44,20 @@ repositories {
 }
 
 dependencies {
+    // springboot
+    implementation "org.springframework.boot:spring-boot-starter"
     // apache-camel
-    implementation 'org.apache.camel:camel-spring-boot:2..24.2'
+    implementation "org.apache.camel:camel-spring-boot-starter:${project.'camel.version'}"
     // This dependency is used by the application.
-    implementation 'com.google.guava:guava:28.0-jre'
-
+    implementation "com.google.guava:guava:28.0-jre"
+    // Use Lombok
+    implementation "org.projectlombok:lombok:${project.'lombok.version'}"
     // Use JUnit Jupiter API for testing.
-    testImplementation 'org.junit.jupiter:junit-jupiter-api:5.4.2'
-
+    testImplementation "org.junit.jupiter:junit-jupiter-api:${project.'junit.version'}"
     // Use JUnit Jupiter Engine for testing.
-    testRuntimeOnly 'org.junit.jupiter:junit-jupiter-engine:5.4.2'
+    testRuntimeOnly "org.junit.jupiter:junit-jupiter-engine:${project.'junit.version'}"
+    // Spring Test
+    testRuntimeOnly "org.springframework.boot:spring-boot-starter-test"
 }
 
 application {
