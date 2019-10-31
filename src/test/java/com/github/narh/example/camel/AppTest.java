@@ -3,10 +3,49 @@
  */
 package com.github.narh.example.camel;
 
-import org.junit.jupiter.api.Test;
 import static org.junit.jupiter.api.Assertions.*;
 
+import org.apache.camel.CamelContext;
+import org.apache.camel.EndpointInject;
+import org.apache.camel.Produce;
+import org.apache.camel.ProducerTemplate;
+import org.apache.camel.ServiceStatus;
+import org.apache.camel.component.mock.MockEndpoint;
+import org.apache.camel.test.spring.junit5.CamelSpringTest;
+import org.junit.jupiter.api.Test;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.test.annotation.DirtiesContext;
+import org.springframework.test.annotation.DirtiesContext.ClassMode;
+import org.springframework.test.context.ContextConfiguration;
+
+@CamelSpringTest
+@ContextConfiguration
+@DirtiesContext(classMode = ClassMode.AFTER_EACH_TEST_METHOD)
 class AppTest {
+
+	@Autowired
+    protected CamelContext camelContext;
+
+	@EndpointInject("mock:a")
+    protected MockEndpoint mockA;
+
+    @EndpointInject("mock:b")
+    protected MockEndpoint mockB;
+
+    @Produce("direct:start")
+    protected ProducerTemplate start;
+
+    @Test void testReceive() throws Exception {
+    	assertEquals(ServiceStatus.Started, camelContext.getStatus());
+
+        mockA.expectedBodiesReceived("David");
+        mockB.expectedBodiesReceived("Hello David");
+
+        start.sendBody("David");
+
+        MockEndpoint.assertIsSatisfied(camelContext);
+    }
+
     @Test void appHasAGreeting() {
         App classUnderTest = new App();
         assertNotNull(classUnderTest.getGreeting(), "app should have a greeting");

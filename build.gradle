@@ -20,6 +20,9 @@ buildscript {
   repositories {
     jcenter()
     mavenCentral()
+    maven {
+      url "https://repository.apache.org/content/repositories/releases"
+    }
   }
   dependencies {
     classpath "org.springframework.boot:spring-boot-gradle-plugin:${project.'springboot.version'}"
@@ -52,12 +55,19 @@ dependencies {
     implementation "com.google.guava:guava:28.0-jre"
     // Use Lombok
     implementation "org.projectlombok:lombok:${project.'lombok.version'}"
+    // Use JAXB
+    implementation "javax.activation:javax.activation-api:1.2.0"
+    implementation "javax.xml.bind:jaxb-api:2.4.0-b180830.0359"
+    implementation "com.sun.xml.bind:jaxb-core:2.3.0.1"
+    implementation "com.sun.xml.bind:jaxb-impl:2.4.0-b180830.0438"
     // Use JUnit Jupiter API for testing.
     testImplementation "org.junit.jupiter:junit-jupiter-api:${project.'junit.version'}"
     // Use JUnit Jupiter Engine for testing.
-    testRuntimeOnly "org.junit.jupiter:junit-jupiter-engine:${project.'junit.version'}"
+    testImplementation "org.junit.jupiter:junit-jupiter-engine:${project.'junit.version'}"
     // Spring Test
-    testRuntimeOnly "org.springframework.boot:spring-boot-starter-test"
+    testImplementation "org.springframework.boot:spring-boot-starter-test:${project.'springboot.version'}"
+    // Camel Test
+    testImplementation "org.apache.camel:camel-test-spring-junit5:${project.'camel.version'}"
 }
 
 application {
@@ -69,3 +79,6 @@ test {
     // Use junit platform for unit tests
     useJUnitPlatform()
 }
+
+sourceCompatibility = "1.9+"
+sourceCompatibility = "1.9+"
